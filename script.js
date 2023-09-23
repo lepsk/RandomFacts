@@ -41,7 +41,7 @@ document.getElementById('refresh').addEventListener('click', fetchFact);
 // Listen for mouse movement
 document.addEventListener('mousemove', function() {
     clearTimeout(timeout);
-    document.body.style.backgroundColor = '#333'; // dark grey
+    document.body.style.backgroundColor = '#121212'; // dark grey
 
     timeout = setTimeout(function() {
         document.body.style.backgroundColor = '#000'; // black
