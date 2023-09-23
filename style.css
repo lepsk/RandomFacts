@@ -22,7 +22,7 @@ body {
     text-align: center;
     padding: 20px;
     border-radius: 15px;
-    background-color: #111; /* even darker background */
+    background-color: #090909; /* even darker background */
     color: #fff;
     opacity: 0;
     transition: opacity 0.5s ease-in-out;
