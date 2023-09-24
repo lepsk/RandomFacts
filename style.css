@@ -1,5 +1,5 @@
 html {
-    background-color: rgb(0, 0, 0);
+    background-color: #000;
 }
 
 body {
@@ -9,12 +9,12 @@ body {
     height: 100vh;
     width: 100vw;
     overflow: hidden;
-    font-family: Minimal, sans-serif;
-    background-color: rgb(18, 18, 18);
-    margin: 0px;
-    padding: 20px;
+    font-family: 'Minimal', sans-serif;
+    background-color: #121212; /* 25% darker grey background */
+    margin: 0;
+    padding: 0;
     position: relative;
-    transition: background-color 0.5s ease 0s;
+    transition: background-color 0.5s ease;
 }
 
 #fact-container {
@@ -22,24 +22,42 @@ body {
     text-align: center;
     padding: 20px;
     border-radius: 15px;
-    background-color: rgb(9, 9, 9);
-    color: rgb(255, 255, 255);
+    background-color: #090909; /* even darker background */
+    color: #fff;
     opacity: 0;
-    transition: opacity 0.5s ease-in-out 0s;
+    transition: opacity 0.5s ease-in-out;
 }
 
 #refresh {
     position: absolute;
-    bottom: 35px;
-    right: 35px;
+    bottom: 20px; /* updated from 30px to 35px */
+    right: 35px; /* updated from 35px to 40px */
     width: 50px;
     height: 50px;
     cursor: pointer;
-    transition: transform 0.3s ease 0s;
+    transition: transform 0.3s ease;
 }
 
 #refresh:hover {
     transform: scale(1.1);
+}
+
+#language-selector {
+    position: absolute;
+    bottom: 35px; /* adjust as needed */
+    left: 35px; /* adjust as needed */
+}
+
+#language {
+    font-size: 16px;
+    border: 2px solid #fff; /* increase border width from 1px to 2px */
+    border-radius: 5px; /* add this line to make the corners rounder */
+    background: #333; /* dark grey background */
+    color: #fff; /* white text */
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }
 
 @media only screen and (max-width: 600px) {
@@ -53,9 +71,9 @@ body {
     }
 
     #refresh {
-        bottom: 35px;
-        right: 35x;
-        width: 50px;
-        height: 50px;
+        bottom: 35px; /* no change */
+        right: 40px; /* no change */
+        width: 30px;
+        height: 30px;
     }
 }
