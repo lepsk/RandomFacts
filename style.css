@@ -30,8 +30,8 @@ body {
 
 #refresh {
     position: absolute;
-    bottom: 10px; /* reduced from 35px */
-    right: 20px; /* reduced from 40px */
+    bottom: 35px; /* updated from 30px to 35px */
+    right: 40px; /* updated from 35px to 40px */
     width: 50px;
     height: 50px;
     cursor: pointer;
@@ -44,8 +44,8 @@ body {
 
 #language-selector {
     position: absolute;
-    bottom: 20px; /* reduced from 35px */
-    left: 20px; /* reduced from 35px */
+    bottom: 35px; /* adjust as needed */
+    left: 35px; /* adjust as needed */
 }
 
 #language {
@@ -71,9 +71,14 @@ body {
     }
 
     #refresh {
-        bottom: 20px; /* no change */
+        bottom: 10px; /* reduced from 20px */
         right: 20px; /* no change */
         width: 30px;
         height: 30px;
+    }
+
+    #language-selector {
+        bottom: 10px; /* reduced from 20px */
+        left: 20px; /* no change */
     }
 }
