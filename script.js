@@ -12,7 +12,8 @@ function fetchFact() {
         factContainer.style.opacity = 1;
     }, 500);
 
-    fetch('https://api.api-ninjas.com/v1/dadjokes', {
+    fetch('https://api.api-ninjas.com/v1/facts
+', {
         headers: {
             'X-Api-Key': 'rctsX3r2CIWwWe1aIBRvIw==EhNt3AHCgeH2z0Jn'
         }
