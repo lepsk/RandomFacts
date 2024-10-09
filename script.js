@@ -12,7 +12,7 @@ function fetchFact() {
         factContainer.style.opacity = 1;
     }, 500);
 
-    fetch('https://api.api-ninjas.com/v1/facts', {
+    fetch('https://api.api-ninjas.com/v1/dadjokes', {
         headers: {
             'X-Api-Key': 'rctsX3r2CIWwWe1aIBRvIw==EhNt3AHCgeH2z0Jn'
         }
@@ -41,7 +41,7 @@ function fetchFact() {
 }
 
 function translateFact(fact, language) {
-    const url = 'https://microsoft-translator-text.p.rapidapi.com/translate?api-version=3.0&to=' + language;
+    const url = 'https://microsoft-translator-text.p.rapidapi.com/languages?api-version=3.0' + language;
     const options = {
         method: 'POST',
         headers: {
