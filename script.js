@@ -14,7 +14,7 @@ function fetchFact() {
 
     fetch('https://api.api-ninjas.com/v1/facts?limit=1', {
         headers: {
-            'X-Api-Key': 'fUPphqXU2zSe51bpbdrw1JEeQtpw9CJ6xzukpxPH'
+            'X-Api-Key': 'rctsX3r2CIWwWe1aIBRvIw==EhNt3AHCgeH2z0Jn'
         }
     })
     .then(response => response.json())
