@@ -12,17 +12,22 @@ function fetchFact() {
         factContainer.style.opacity = 1;
     }, 500);
 
-    fetch('https://api.api-ninjas.com/v1/facts
-', {
+    fetch('https://api.api-ninjas.com/v1/facts', {
         headers: {
             'X-Api-Key': 'rctsX3r2CIWwWe1aIBRvIw==EhNt3AHCgeH2z0Jn'
         }
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => {
-        if (data && data[0] && data[0].fact) {
+        console.log('API Response:', data);
+        if (data && data.length > 0 && data[0].fact) {
             if (languageSelector.value !== 'en') {
-                translateFact(data[0].fact, languageSelector.value); // translate the fact into the selected language
+                translateFact(data[0].fact, languageSelector.value);
             } else {
                 factContainer.style.opacity = 0;
                 setTimeout(function() {
@@ -31,18 +36,18 @@ function fetchFact() {
                 }, 500);
             }
         } else {
-            fact.textContent = 'Fact not found in response.';
+            fact.textContent = 'No fact available at the moment. Please try again.';
         }
         firstLoad = false;
     })
     .catch(error => {
         console.error('Error:', error);
-        fact.textContent = 'An error occurred.';
+        fact.textContent = `An error occurred: ${error.message}`;
     });
 }
 
-function translateFact(fact, language) {
-    const url = 'https://microsoft-translator-text.p.rapidapi.com/languages?api-version=3.0' + language;
+function translateFact(factText, language) {
+    const url = `https://microsoft-translator-text.p.rapidapi.com/translate?to=${language}&api-version=3.0`;
     const options = {
         method: 'POST',
         headers: {
@@ -52,14 +57,20 @@ function translateFact(fact, language) {
         },
         body: JSON.stringify([
             {
-                Text: fact
+                Text: factText
             }
         ])
     };
 
     fetch(url, options)
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => {
+        console.log('Translation API Response:', data);
         let factContainer = document.getElementById('fact-container');
         let fact = document.getElementById('fact');
         if (data && data[0] && data[0].translations && data[0].translations[0].text) {
@@ -74,15 +85,14 @@ function translateFact(fact, language) {
     })
     .catch(error => {
         console.error('Error:', error);
-        fact.textContent = 'An error occurred during translation.';
+        fact.textContent = `An error occurred during translation: ${error.message}`;
     });
 }
 
 fetchFact();
 document.getElementById('refresh').addEventListener('click', fetchFact);
-document.getElementById('language').addEventListener('change', fetchFact); // Add this line
+document.getElementById('language').addEventListener('change', fetchFact);
 
-// Listen for mouse movement
 document.addEventListener('mousemove', function() {
     clearTimeout(timeout);
     document.body.style.backgroundColor = '#121212'; // dark grey
