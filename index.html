@@ -10,14 +10,22 @@
     <div id="fact-container">
         <p id="fact">Loading...</p>
     </div>
-    <img id="refresh" src="refresh.png" alt="Refresh">
+    <img id="refresh" src="refresh.png" alt="Refresh"> <!-- Dark mode reload button -->
+    <img id="refresh-light" src="refresh-light.png" alt="Refresh" style="display: none;"> <!-- Light mode reload button -->
 
     <div id="language-selector">
+        <button id="language-btn">Languages</button>
+    </div>
+
+    <div id="language-menu">
+        <span class="close-btn">X</span>
         <select id="language">
             <option value="en">🇺🇸 English</option>
             <option value="ru">🇷🇺 Russian</option>
-            <option value="he">🇮🇱 Hebrew</option> <!-- Add this line -->
+            <option value="he">🇮🇱 Hebrew</option>
         </select>
+        <button id="toggle-glow">Toggle Glow</button>
+        <button id="toggle-theme">Toggle Theme</button>
     </div>
 
     <script src="script.js"></script>
