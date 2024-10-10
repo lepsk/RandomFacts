@@ -1,11 +1,16 @@
 let firstLoad = true;
 let timeout;
+let glowEnabled = true;
 
 function fetchFact() {
     let factContainer = document.getElementById('fact-container');
     let fact = document.getElementById('fact');
     let languageSelector = document.getElementById('language');
-    
+
+    if (glowEnabled) {
+        factContainer.className = ''; // Remove previous glow effect class
+    }
+
     factContainer.style.opacity = 0;
     setTimeout(function() {
         fact.textContent = firstLoad ? 'Loading Your Fact...' : 'Loading Your New Fact...';
@@ -33,6 +38,12 @@ function fetchFact() {
                 setTimeout(function() {
                     fact.textContent = data[0].fact;
                     factContainer.style.opacity = 1;
+
+                    if (glowEnabled) {
+                        // Apply random glow effect with truly random colors
+                        const randomColor = `hsl(${Math.random() * 360}, 100%, 75%)`;
+                        factContainer.style.boxShadow = `0 0 30px 20px ${randomColor}`;
+                    }
                 }, 500);
             }
         } else {
@@ -78,6 +89,11 @@ function translateFact(factText, language) {
             setTimeout(function() {
                 fact.textContent = data[0].translations[0].text;
                 factContainer.style.opacity = 1;
+                if (glowEnabled) {
+                    // Apply random glow effect with truly random colors
+                    const randomColor = `hsl(${Math.random() * 360}, 100%, 75%)`;
+                    factContainer.style.boxShadow = `0 0 30px 20px ${randomColor}`;
+                }
             }, 500);
         } else {
             throw new Error('Translation not found in response.');
@@ -91,13 +107,35 @@ function translateFact(factText, language) {
 
 fetchFact();
 document.getElementById('refresh').addEventListener('click', fetchFact);
+document.getElementById('refresh-light').addEventListener('click', fetchFact); // Add event listener for light theme button
 document.getElementById('language').addEventListener('change', fetchFact);
 
-document.addEventListener('mousemove', function() {
-    clearTimeout(timeout);
-    document.body.style.backgroundColor = '#121212'; // dark grey
+document.getElementById('language-btn').addEventListener('click', function() {
+    document.body.classList.toggle('modal-active');
+});
 
-    timeout = setTimeout(function() {
-        document.body.style.backgroundColor = '#000'; // black
-    }, 1000); // change back to black after 1 second of no mouse movement
+document.querySelector('#language-menu .close-btn').addEventListener('click', function() {
+    document.body.classList.remove('modal-active');
+});
+
+document.body.addEventListener('click', function(event) {
+    if (event.target === document.body && document.body.classList.contains('modal-active')) {
+        document.body.classList.remove('modal-active');
+    }
+});
+
+document.getElementById('toggle-glow').addEventListener('click', function() {
+    glowEnabled = !glowEnabled;
+    if (glowEnabled) {
+        const randomColor = `hsl(${Math.random() * 360}, 100%, 75%)`;
+        document.getElementById('fact-container').style.boxShadow = `0 0 30px 20px ${randomColor}`;
+    } else {
+        document.getElementById('fact-container').style.boxShadow = 'none';
+    }
+});
+
+document.getElementById('toggle-theme').addEventListener('click', function() {
+    document.body.classList.toggle('light-theme');
+    document.getElementById('refresh').style.display = document.body.classList.contains('light-theme') ? 'none' : 'block';
+    document.getElementById('refresh-light').style.display = document.body.classList.contains('light-theme') ? 'block' : 'none';
 });
