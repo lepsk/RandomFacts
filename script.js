@@ -109,11 +109,11 @@ document.getElementById('language').addEventListener('change', function() {
     fetchFact();
 });
 
-document.getElementById('language-btn').addEventListener('click', function() {
+document.getElementById('settings-btn').addEventListener('click', function() {
     document.body.classList.toggle('modal-active');
 });
 
-document.querySelector('#language-menu .close-btn').addEventListener('click', function() {
+document.querySelector('#settings-menu .close-btn').addEventListener('click', function() {
     document.body.classList.remove('modal-active');
 });
 
