@@ -54,14 +54,14 @@ body {
     transform: scale(1.1);
 }
 
-#language-selector {
+#settings-selector {
     position: absolute;
     bottom: 35px;
     left: 35px;
 }
 
-#language-btn {
-    background: linear-gradient(145deg, #e0e0e0, #ffffff);
+#settings-btn {
+    background: linear-gradient(120deg, #e0e0e0, #ffffff);
     border-radius: 25px;
     padding: 10px 30px;
     border: none;
@@ -72,12 +72,12 @@ body {
     font-family: 'San Francisco', sans-serif;
 }
 
-#language-btn:hover {
+#settings-btn:hover {
     box-shadow: 6px 6px 20px rgba(0, 0, 0, 0.2), -6px -6px 20px rgba(255, 255, 255, 0.8);
     transform: translateY(-2px);
 }
 
-#language-menu {
+#settings-menu {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -94,7 +94,7 @@ body {
     text-align: center;
 }
 
-#language-menu .close-btn {
+#settings-menu .close-btn {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -104,11 +104,11 @@ body {
     transition: color 0.3s ease;
 }
 
-#language-menu .close-btn:hover {
+#settings-menu .close-btn:hover {
     color: #ff6666;
 }
 
-#language-menu .menu-header {
+#settings-menu .menu-header {
     font-size: 22px;
     margin-bottom: 15px;
     font-weight: bold;
@@ -116,7 +116,7 @@ body {
     color: #fff;
 }
 
-#language-menu select {
+#settings-menu select {
     font-size: 16px;
     padding: 10px;
     border-radius: 12px;
@@ -128,12 +128,12 @@ body {
     margin-bottom: 15px;
 }
 
-#language-menu button {
+#settings-menu button {
     font-size: 16px;
     padding: 10px 20px;
     border-radius: 25px;
     border: none;
-    background: linear-gradient(145deg, #e0e0e0, #ffffff);
+    background: linear-gradient(120deg, #e0e0e0, #ffffff);
     color: #333;
     cursor: pointer;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
@@ -142,12 +142,12 @@ body {
     font-family: 'San Francisco', sans-serif;
 }
 
-#language-menu button:hover {
+#settings-menu button:hover {
     box-shadow: 6px 6px 20px rgba(0, 0, 0, 0.2), -6px -6px 20px rgba(255, 255, 255, 0.8);
     transform: translateY(-2px);
 }
 
-body.modal-active #language-menu {
+body.modal-active #settings-menu {
     display: block;
 }
 
@@ -174,7 +174,7 @@ body.light-theme #fact-container {
     color: #000;
 }
 
-body.light-theme #language-menu {
+body.light-theme #settings-menu {
     background: rgba(255, 255, 255, 0.4);
     color: #333;
 }
@@ -205,7 +205,7 @@ body.light-theme #language-menu {
         height: 30px;
     }
 
-    #language-selector {
+    #settings-selector {
         bottom: 10px;
         left: 20px;
     }
