@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Random Fact Generator</title>
     <link rel="icon" href="faviconmonke.ico" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
+
 <body>
     <div id="fact-container">
         <p id="fact">Loading...</p>
     </div>
-    <img id="refresh" src="refresh.png" alt="Refresh"> <!-- Dark mode reload button -->
-    <img id="refresh-light" src="refresh-light.png" alt="Refresh" style="display: none;"> <!-- Light mode reload button -->
+    <img id="refresh" src="refresh.png" alt="Refresh">
+    <img id="refresh-light" src="refresh-light.png" alt="Refresh" style="display: none;">
 
     <div id="language-selector">
         <button id="language-btn">Languages</button>
@@ -19,10 +21,11 @@
 
     <div id="language-menu">
         <span class="close-btn">X</span>
+        <div class="menu-header">Select Language</div>
         <select id="language">
-            <option value="en">🇺🇸 English</option>
-            <option value="ru">🇷🇺 Russian</option>
-            <option value="he">🇮🇱 Hebrew</option>
+            <option value="en">English</option>
+            <option value="he">Hebrew</option>
+            <option value="ru">Russian</option>
         </select>
         <button id="toggle-glow">Toggle Glow</button>
         <button id="toggle-theme">Toggle Theme</button>
@@ -30,4 +33,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>
