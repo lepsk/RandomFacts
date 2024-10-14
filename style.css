@@ -62,21 +62,20 @@ body {
 
 #settings-btn {
     background: linear-gradient(120deg, #e0e0e0, #ffffff);
-    border-radius: 25px;
+    border-radius: 15px; /* Adjusted to match the fact box */
     padding: 10px 30px;
     border: none;
     color: #333;
     font-size: 18px;
-    box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.1), -6px -6px 15px rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 255, 255, 0.5); /* Even shadow with white glow */
     transition: box-shadow 0.3s ease, transform 0.3s ease;
     font-family: 'San Francisco', sans-serif;
 }
 
 #settings-btn:hover {
-    box-shadow: 6px 6px 20px rgba(0, 0, 0, 0.2), -6px -6px 20px rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 255, 255, 0.5); /* Even shadow with white glow on hover */
     transform: translateY(-2px);
 }
-
 #settings-menu {
     position: fixed;
     top: 50%;
