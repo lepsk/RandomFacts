@@ -16,7 +16,7 @@ function fetchFact() {
 
     factContainer.style.opacity = 0;
     setTimeout(function() {
-        fact.textContent = firstLoad ? 'Loading Your Fact...' : 'Loading Your New Fact...';
+        fact.textContent = firstLoad ? 'Loading Your Fact' : 'Loading Your New Fact';
         factContainer.style.opacity = 1;
     }, 500);
 
