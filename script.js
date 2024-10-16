@@ -1,6 +1,6 @@
 let firstLoad = true;
 let timeout;
-let glowEnabled = localStorage.getItem('glowEnabled') === 'true';
+let glowEnabled = localStorage.getItem('glowEnabled') === 'false';
 let selectedLanguage = localStorage.getItem('selectedLanguage') || 'en';
 
 function fetchFact() {
