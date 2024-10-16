@@ -1,6 +1,6 @@
 let firstLoad = true;
 let timeout;
-let glowEnabled = localStorage.getItem('glowEnabled') === 'false';
+let glowEnabled = localStorage.getItem('glowEnabled') === 'true' || localStorage.getItem('glowEnabled') === null; // Defaults to true if not set
 let selectedLanguage = localStorage.getItem('selectedLanguage') || 'en';
 
 function fetchFact() {
@@ -88,18 +88,23 @@ function displayFact(factText, targetLang) {
             fact.classList.remove('rtl');
         }
 
-        if (glowEnabled) {
-            const randomColor = `hsl(${Math.random() * 360}, 100%, 75%)`;
-            factContainer.style.boxShadow = `0 0 30px 20px ${randomColor}`;
-        }
+        applyGlowEffect(); // Apply glow after displaying the fact
     }, 500);
 }
 
+function applyGlowEffect() {
+    const factContainer = document.getElementById('fact-container');
+    if (glowEnabled) {
+        const randomColor = `hsl(${Math.random() * 360}, 100%, 75%)`;
+        factContainer.style.boxShadow = `0 0 30px 20px ${randomColor}`;
+    } else {
+        factContainer.style.boxShadow = 'none';
+    }
+}
 
-fetchFact();
+fetchFact(); // Fetch the first fact
 
 document.getElementById('language').value = selectedLanguage;
-
 
 document.getElementById('refresh').addEventListener('click', fetchFact);
 document.getElementById('refresh-light').addEventListener('click', fetchFact);
@@ -126,12 +131,8 @@ document.body.addEventListener('click', function(event) {
 document.getElementById('toggle-glow').addEventListener('click', function() {
     glowEnabled = !glowEnabled;
     localStorage.setItem('glowEnabled', glowEnabled);
-    const factContainer = document.getElementById('fact-container');
-    factContainer.style.boxShadow = glowEnabled 
-        ? `0 0 30px 20px hsl(${Math.random() * 360}, 100%, 75%)`
-        : 'none';
+    applyGlowEffect(); // Update the glow effect when toggled
 });
-
 
 document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('theme');
@@ -141,7 +142,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('refresh-light').style.display = savedTheme === 'light-theme' ? 'block' : 'none';
     }
 });
-
 
 document.getElementById('toggle-theme').addEventListener('click', function() {
     document.body.classList.toggle('light-theme');
