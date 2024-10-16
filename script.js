@@ -1,7 +1,8 @@
 let firstLoad = true;
 let timeout;
-let glowEnabled = localStorage.getItem('glowEnabled') === 'true' || localStorage.getItem('glowEnabled') === null; // Defaults to true if not set
+let glowEnabled = localStorage.getItem('glowEnabled') === 'true' || localStorage.getItem('glowEnabled') === null;
 let selectedLanguage = localStorage.getItem('selectedLanguage') || 'en';
+let fetchedFacts = new Set();
 
 function fetchFact() {
     let factContainer = document.getElementById('fact-container');
@@ -20,10 +21,14 @@ function fetchFact() {
         factContainer.style.opacity = 1;
     }, 500);
 
-    fetch('https://api.api-ninjas.com/v1/facts', {
-        headers: {
-            'X-Api-Key': 'rctsX3r2CIWwWe1aIBRvIw==EhNt3AHCgeH2z0Jn' //I know the API key is visible, but I don't care since it's not attached to any credit card or sensitive information. If you abuse this API key for fun or any other reason, you're likely a sad and lonely person who should consider seeking help :)
-        }
+  
+    const useNewAPI = Math.random() < 0.5;
+    const url = useNewAPI 
+        ? 'https://uselessfacts.jsph.pl/api/v2/facts/random?language=en'
+        : 'https://api.api-ninjas.com/v1/facts';
+
+    fetch(url, {
+        headers: useNewAPI ? {} : { 'X-Api-Key': 'rctsX3r2CIWwWe1aIBRvIw==EhNt3AHCgeH2z0Jn' } // I know the API key is visible, but I don't care since it's not attached to any credit card or sensitive information. If you abuse this API key for fun or any other reason, you're likely a sad and lonely person who should consider seeking help :)
     })
     .then(response => {
         if (!response.ok) {
@@ -32,12 +37,24 @@ function fetchFact() {
         return response.json();
     })
     .then(data => {
-        console.log('API Response:', data);
-        if (data && data.length > 0 && data[0].fact) {
-            if (languageSelector.value !== 'en') {
-                translateFact(data[0].fact, languageSelector.value);
+        let factText;
+        if (useNewAPI) {
+            factText = data.text; 
+        } else {
+            factText = data[0]?.fact; 
+        }
+
+        if (factText) {
+            
+            if (fetchedFacts.has(factText)) {
+                fetchFact(); 
             } else {
-                displayFact(data[0].fact, 'en');
+                fetchedFacts.add(factText);
+                if (languageSelector.value !== 'en') {
+                    translateFact(factText, languageSelector.value);
+                } else {
+                    displayFact(factText, 'en');
+                }
             }
         } else {
             fact.textContent = 'No fact available at the moment. Please try again.';
@@ -88,7 +105,7 @@ function displayFact(factText, targetLang) {
             fact.classList.remove('rtl');
         }
 
-        applyGlowEffect(); // Apply glow after displaying the fact
+        applyGlowEffect();
     }, 500);
 }
 
@@ -102,7 +119,7 @@ function applyGlowEffect() {
     }
 }
 
-fetchFact(); // Fetch the first fact
+fetchFact();
 
 document.getElementById('language').value = selectedLanguage;
 
@@ -131,7 +148,7 @@ document.body.addEventListener('click', function(event) {
 document.getElementById('toggle-glow').addEventListener('click', function() {
     glowEnabled = !glowEnabled;
     localStorage.setItem('glowEnabled', glowEnabled);
-    applyGlowEffect(); // Update the glow effect when toggled
+    applyGlowEffect();
 });
 
 document.addEventListener('DOMContentLoaded', () => {
