@@ -22,7 +22,7 @@ function fetchFact() {
 
     fetch('https://api.api-ninjas.com/v1/facts', {
         headers: {
-            'X-Api-Key': 'rctsX3r2CIWwWe1aIBRvIw==EhNt3AHCgeH2z0Jn'
+            'X-Api-Key': 'rctsX3r2CIWwWe1aIBRvIw==EhNt3AHCgeH2z0Jn' //I know the API key is visible, but I don't care since it's not attached to any credit card or sensitive information. If you abuse this API key for fun or any other reason, you're likely a sad and lonely person who should consider seeking help :)
         }
     })
     .then(response => {
