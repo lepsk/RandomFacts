@@ -28,6 +28,11 @@ body {
     transition: opacity 0.5s ease-in-out, box-shadow 0.5s ease, background-color 0.5s ease;
     box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(10px);
+    overflow-wrap: break-word; /* Allow long words to break */
+    word-wrap: break-word; /* Ensure long text breaks properly */
+    max-width: 90%; /* Set maximum width to prevent cut-off */
+    margin: 0 auto; /* Center the box horizontally */
+    position: relative; /* Allow for absolute positioning of glow */
 }
 
 #refresh {
@@ -50,7 +55,8 @@ body {
     transition: transform 0.3s ease;
 }
 
-#refresh:hover, #refresh-light:hover {
+#refresh:hover,
+#refresh-light:hover {
     transform: scale(1.1);
 }
 
@@ -62,20 +68,21 @@ body {
 
 #settings-btn {
     background: linear-gradient(120deg, #e0e0e0, #ffffff);
-    border-radius: 15px; /* Adjusted to match the fact box */
+    border-radius: 15px;
     padding: 10px 30px;
     border: none;
     color: #333;
     font-size: 18px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 255, 255, 0.5); /* Even shadow with white glow */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 255, 255, 0.5);
     transition: box-shadow 0.3s ease, transform 0.3s ease;
     font-family: 'San Francisco', sans-serif;
 }
 
 #settings-btn:hover {
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 255, 255, 0.5); /* Even shadow with white glow on hover */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 255, 255, 0.5);
     transform: translateY(-2px);
 }
+
 #settings-menu {
     position: fixed;
     top: 50%;
@@ -98,24 +105,19 @@ body {
     top: 10px;
     right: 10px;
     cursor: pointer;
-    width: 30px; /* Adjust size as needed */
-    height: 30px; /* Adjust size as needed */
+    width: 30px;
+    height: 30px;
 }
 
 #settings-menu .close-btn img {
-    width: 100%; /* Makes the image responsive */
-    height: auto; /* Maintains aspect ratio */
-}
-
-#settings-menu .close-btn:hover {
-    color: #ff6666;
+    width: 100%;
+    height: auto;
 }
 
 #settings-menu .menu-header {
     font-size: 22px;
     margin-bottom: 15px;
     font-weight: bold;
-    font-family: 'San Francisco', sans-serif;
     color: #fff;
 }
 
@@ -127,7 +129,6 @@ body {
     background: #f0f0f0;
     color: #000;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    font-family: 'San Francisco', sans-serif;
     margin-bottom: 15px;
 }
 
@@ -142,7 +143,6 @@ body {
     transition: box-shadow 0.3s ease, transform 0.3s ease;
     margin-top: 10px;
     box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.1), -6px -6px 15px rgba(255, 255, 255, 0.7);
-    font-family: 'San Francisco', sans-serif;
 }
 
 #settings-menu button:hover {
@@ -201,7 +201,8 @@ body.light-theme #settings-menu {
         padding: 10px;
     }
 
-    #refresh, #refresh-light {
+    #refresh,
+    #refresh-light {
         bottom: 10px;
         right: 20px;
         width: 30px;
@@ -213,7 +214,48 @@ body.light-theme #settings-menu {
         left: 20px;
     }
 }
+
 .rtl {
     direction: rtl;
     text-align: right;
+}
+
+/* Cooldown message styling */
+#cooldown-message {
+    position: absolute;
+    bottom: 26px; /* Adjust position to be closer to the refresh button */
+    right: 20px; /* Adjust position for better alignment */
+    backdrop-filter: blur(8px); /* Subtle blur effect */
+    background-color: rgba(0, 0, 0, 0.6); /* Darker transparent background for better integration */
+    color: #fff;
+    padding: 10px 15px; /* Reduced padding for a more compact feel */
+    border-radius: 12px; /* Slightly smaller radius for compactness */
+    font-size: 16px; /* Font size adjusted for compactness */
+    z-index: 1000;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Subtle shadow for depth */
+    text-align: center; /* Centered text */
+    animation: slide-in 0.3s ease; /* Animation for appearance */
+}
+
+/* Animation for the cooldown message */
+@keyframes slide-in {
+    from {
+        transform: translateY(5px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+
+@media only screen and (max-width: 600px) {
+    #cooldown-message {
+        bottom: 70px; /* Adjust position for mobile */
+        right: 15px; /* Adjust position for mobile */
+        padding: 8px 12px; /* Smaller padding for mobile */
+        font-size: 14px; /* Slightly smaller font for mobile */
+    }
 }

@@ -4,7 +4,16 @@ let glowEnabled = localStorage.getItem('glowEnabled') === 'true' || localStorage
 let selectedLanguage = localStorage.getItem('selectedLanguage') || 'en';
 let fetchedFacts = new Set();
 
+let cooldownActive = false; // To track if cooldown is active
+const cooldownDuration = 6.9; // Cooldown duration in seconds
+
+let pendingAction = null; // Store the pending action during cooldown
+
 function fetchFact() {
+    if (cooldownActive) {
+        return; // If cooldown is active, do nothing
+    }
+    
     let factContainer = document.getElementById('fact-container');
     let fact = document.getElementById('fact');
     let languageSelector = document.getElementById('language');
@@ -21,14 +30,13 @@ function fetchFact() {
         factContainer.style.opacity = 1;
     }, 500);
 
-  
     const useNewAPI = Math.random() < 0.5;
     const url = useNewAPI 
         ? 'https://uselessfacts.jsph.pl/api/v2/facts/random?language=en'
         : 'https://api.api-ninjas.com/v1/facts';
 
     fetch(url, {
-        headers: useNewAPI ? {} : { 'X-Api-Key': 'rctsX3r2CIWwWe1aIBRvIw==EhNt3AHCgeH2z0Jn' } // I know the API key is visible, but I don't care since it's not attached to any credit card or sensitive information. If you abuse this API key for fun or any other reason, you're likely a sad and lonely person who should consider seeking help :)
+        headers: useNewAPI ? {} : { 'X-Api-Key': 'rctsX3r2CIWwWe1aIBRvIw==EhNt3AHCgeH2z0Jn' }
     })
     .then(response => {
         if (!response.ok) {
@@ -45,7 +53,6 @@ function fetchFact() {
         }
 
         if (factText) {
-            
             if (fetchedFacts.has(factText)) {
                 fetchFact(); 
             } else {
@@ -66,6 +73,62 @@ function fetchFact() {
         fact.textContent = `An error occurred: ${error.message}`;
     });
 }
+
+let refreshButton = document.getElementById('refresh');
+let refreshLightButton = document.getElementById('refresh-light');
+
+// Initialize cooldown message
+const cooldownMessage = document.createElement('div');
+cooldownMessage.id = 'cooldown-message';
+document.body.appendChild(cooldownMessage); // Add to the body
+cooldownMessage.style.display = 'none'; // Initially hidden
+
+function startCooldown() {
+    cooldownActive = true; // Set cooldown active
+    let countdown = cooldownDuration;
+
+    cooldownMessage.style.display = 'block'; // Show cooldown message
+    cooldownMessage.textContent = `Cooldown: ${countdown.toFixed(1)} seconds`; // Set initial message
+
+    refreshButton.style.display = 'none'; // Hide the refresh button
+    refreshLightButton.style.display = 'none'; // Hide the refresh light button
+
+    const countdownInterval = setInterval(() => {
+        countdown -= 0.1; // Decrease countdown
+        if (countdown <= 0) {
+            clearInterval(countdownInterval);
+            cooldownMessage.style.display = 'none'; // Hide the message
+            cooldownActive = false; // Reset cooldown active
+            
+            // Perform the pending action if exists
+            if (pendingAction) {
+                pendingAction(); // Execute the pending action
+                pendingAction = null; // Reset pending action
+            }
+            refreshButton.style.display = 'block'; // Restore the refresh button
+            refreshLightButton.style.display = 'block'; // Restore the refresh light button
+        } else {
+            cooldownMessage.textContent = `Cooldown: ${countdown.toFixed(1)} seconds`; // Update message
+        }
+    }, 100); // Update every 100 ms
+}
+
+// Update event listeners for both buttons to replace the button with the countdown
+refreshButton.addEventListener('click', () => {
+    if (cooldownActive) {
+        return; // Do nothing if cooldown is active
+    }
+    fetchFact(); // Fetch a new fact if no cooldown
+    startCooldown(); // Start cooldown after fetching a fact
+});
+
+refreshLightButton.addEventListener('click', () => {
+    if (cooldownActive) {
+        return; // Do nothing if cooldown is active
+    }
+    fetchFact(); // Fetch a new fact if no cooldown
+    startCooldown(); // Start cooldown after fetching a fact
+});
 
 async function translateFact(factText, targetLang) {
     const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(factText)}&langpair=en|${targetLang}`;
@@ -123,12 +186,20 @@ fetchFact();
 
 document.getElementById('language').value = selectedLanguage;
 
-document.getElementById('refresh').addEventListener('click', fetchFact);
-document.getElementById('refresh-light').addEventListener('click', fetchFact);
 document.getElementById('language').addEventListener('change', function() {
-    selectedLanguage = this.value;
+    if (cooldownActive) {
+        pendingAction = () => {
+            selectedLanguage = this.value; // Update the selected language
+            localStorage.setItem('selectedLanguage', selectedLanguage);
+            fetchFact(); // Fetch a new fact after the cooldown
+        };
+        return; // If cooldown is active, do nothing
+    }
+
+    selectedLanguage = this.value; // Update the selected language
     localStorage.setItem('selectedLanguage', selectedLanguage);
-    fetchFact();
+    fetchFact(); // Fetch a new fact with the new language
+    startCooldown(); // Start cooldown
 });
 
 document.getElementById('settings-btn').addEventListener('click', function() {
