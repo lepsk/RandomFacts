@@ -131,10 +131,17 @@ refreshLightButton.addEventListener('click', () => {
 });
 
 async function translateFact(factText, targetLang) {
-    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(factText)}&langpair=en|${targetLang}`;
+    // Construct the URL for the Lingva API
+    const url = `https://lingva.ml/api/v1/translate?text=${encodeURIComponent(factText)}&to=${targetLang}&from=en`;
 
     try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                // 'Accept': 'application/json', // Optional, usually not needed
+            }
+        });
         
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -142,8 +149,9 @@ async function translateFact(factText, targetLang) {
 
         const data = await response.json();
         
-        if (data.responseData && data.responseData.translatedText) {
-            displayFact(data.responseData.translatedText, targetLang);
+        // Lingva returns the translated text in the `text` property
+        if (data && data.text) {
+            displayFact(data.text, targetLang);
         } else {
             throw new Error('Translation not found in response.');
         }
@@ -152,6 +160,7 @@ async function translateFact(factText, targetLang) {
         document.getElementById('fact').textContent = `An error occurred during translation: ${error.message}`;
     }
 }
+
 
 function displayFact(factText, targetLang) {
     let factContainer = document.getElementById('fact-container');
