@@ -139,35 +139,75 @@ async function translateFact(factText, targetLang) {
         return;
     }
 
-    const url = 'https://text-translator2.p.rapidapi.com/translate';
-    const data = new FormData();
-    data.append('source_language', 'en'); // Assuming facts are in English
-    data.append('target_language', targetLang); // Use the selected target language
-    data.append('text', factText); // Send the actual fact text to translate
+    const detectUrl = 'https://deep-translate1.p.rapidapi.com/language/translate/v2/detect';
+    const translateUrl = 'https://deep-translate1.p.rapidapi.com/language/translate/v2';
 
-    const options = {
+    // Detect the language of the fact text
+    const detectOptions = {
         method: 'POST',
         headers: {
-            'x-rapidapi-key': '5ffd41ebd2msheec6268037cc706p128a80jsncca3378cdb06',
-            'x-rapidapi-host': 'text-translator2.p.rapidapi.com'
+            'x-rapidapi-key': '5ffd41ebd2msheec6268037cc706p128a80jsncca3378cdb06', //I know the api key is visable, if you use it for you own project (even tho its 100% free..) or abuse the api key for fun youre a sad and lonely man and you should seek help.. 
+            'x-rapidapi-host': 'deep-translate1.p.rapidapi.com',
+            'Content-Type': 'application/json'
         },
-        body: data
+        body: JSON.stringify({ q: factText }) // Using the fact text to detect language
     };
-    
+
     try {
-        const response = await fetch(url, options);
-        const result = await response.json(); // Parse as JSON to extract translation
-        if (result && result.data && result.data.translatedText) {
-            displayFact(result.data.translatedText, targetLang); // Display translated text
+        const detectResponse = await fetch(detectUrl, detectOptions);
+        const detectResult = await detectResponse.json();
+
+        // Check if the detection was successful
+        if (!detectResult || !detectResult.data || !detectResult.data.detections || detectResult.data.detections.length === 0) {
+            throw new Error('Language detection failed or returned no results');
+        }
+
+        const sourceLanguage = detectResult.data.detections[0].language; // Get detected language
+
+        const translationData = {
+            source_language: sourceLanguage,
+            target_language: targetLang,
+            text: factText
+        };
+
+        console.log('Translation Request Data:', translationData); // Debugging log
+
+        const translateOptions = {
+            method: 'POST',
+            headers: {
+                'x-rapidapi-key': '5ffd41ebd2msheec6268037cc706p128a80jsncca3378cdb06',
+                'x-rapidapi-host': 'deep-translate1.p.rapidapi.com',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                q: factText, // Sending the text to translate
+                source: sourceLanguage, // Using the detected source language
+                target: targetLang // Target language
+            })
+        };
+
+        const translateResponse = await fetch(translateUrl, translateOptions);
+        const translateResult = await translateResponse.json();
+
+        // Check if translation was successful
+        if (translateResponse.ok) {
+            // Adjusted to access the translated text correctly
+            if (translateResult && translateResult.data && translateResult.data.translations && translateResult.data.translations.translatedText) {
+                displayFact(translateResult.data.translations.translatedText, targetLang); // Display translated text
+            } else {
+                console.error('Translation error:', translateResult);
+                displayFact('Translation failed. Please try again.');
+            }
         } else {
-            console.error('Translation error:', result);
-            displayFact('Translation failed. Please try again.', targetLang);
+            console.error('Translation failed:', translateResult.error);
+            displayFact('Translation failed: ' + translateResult.error.message);
         }
     } catch (error) {
         console.error('Error translating fact:', error);
         displayFact(`An error occurred during translation: ${error.message}`, targetLang);
     }
 }
+
 
 function displayFact(factText, targetLang) {
     let factContainer = document.getElementById('fact-container');
