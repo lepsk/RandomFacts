@@ -4,15 +4,15 @@ let glowEnabled = localStorage.getItem('glowEnabled') === 'true' || localStorage
 let selectedLanguage = localStorage.getItem('selectedLanguage') || 'en';
 let fetchedFacts = new Set();
 
-let cooldownActive = false; // To track if cooldown is active
-const cooldownDuration = 6.9; // Cooldown duration in seconds
+let cooldownActive = false;
+const cooldownDuration = 6.9;
 
-let pendingAction = null; // Store the pending action during cooldown
-let currentFactText = ''; // Store the current fact text
+let pendingAction = null;
+let currentFactText = '';
 
 function fetchFact() {
     if (cooldownActive) {
-        return; // If cooldown is active, do nothing
+        return;
     }
     
     let factContainer = document.getElementById('fact-container');
@@ -58,7 +58,7 @@ function fetchFact() {
                 fetchFact(); 
             } else {
                 fetchedFacts.add(factText);
-                currentFactText = factText; // Store the current fact text
+                currentFactText = factText;
                 if (selectedLanguage !== 'en') {
                     translateFact(currentFactText, selectedLanguage);
                 } else {
@@ -76,60 +76,57 @@ function fetchFact() {
     });
 }
 
-let refreshButton = document.getElementById('refresh');
-let refreshLightButton = document.getElementById('refresh-light');
-
 // Initialize cooldown message
 const cooldownMessage = document.createElement('div');
 cooldownMessage.id = 'cooldown-message';
-document.body.appendChild(cooldownMessage); // Add to the body
-cooldownMessage.style.display = 'none'; // Initially hidden
+document.body.appendChild(cooldownMessage);
+cooldownMessage.style.display = 'none';
 
 function startCooldown() {
-    cooldownActive = true; // Set cooldown active
+    cooldownActive = true;
     let countdown = cooldownDuration;
 
-    cooldownMessage.style.display = 'block'; // Show cooldown message
-    cooldownMessage.textContent = `Cooldown: ${countdown.toFixed(1)} seconds`; // Set initial message
+    cooldownMessage.style.display = 'block';
+    cooldownMessage.textContent = `Cooldown: ${countdown.toFixed(1)} seconds`;
 
-    refreshButton.style.display = 'none'; // Hide the refresh button
-    refreshLightButton.style.display = 'none'; // Hide the refresh light button
+    refreshButton.style.display = 'none';
+    refreshLightButton.style.display = 'none';
 
     const countdownInterval = setInterval(() => {
-        countdown -= 0.1; // Decrease countdown
+        countdown -= 0.1;
         if (countdown <= 0) {
             clearInterval(countdownInterval);
-            cooldownMessage.style.display = 'none'; // Hide the message
-            cooldownActive = false; // Reset cooldown active
-            
-            // Perform the pending action if exists
+            cooldownMessage.style.display = 'none';
+            cooldownActive = false;
             if (pendingAction) {
-                pendingAction(); // Execute the pending action
-                pendingAction = null; // Reset pending action
+                pendingAction();
+                pendingAction = null;
             }
-            refreshButton.style.display = 'block'; // Restore the refresh button
-            refreshLightButton.style.display = 'block'; // Restore the refresh light button
+            refreshButton.style.display = 'block';
+            refreshLightButton.style.display = 'block';
         } else {
-            cooldownMessage.textContent = `Cooldown: ${countdown.toFixed(1)} seconds`; // Update message
+            cooldownMessage.textContent = `Cooldown: ${countdown.toFixed(1)} seconds`;
         }
-    }, 100); // Update every 100 ms
+    }, 100);
 }
 
-// Update event listeners for both buttons to replace the button with the countdown
+let refreshButton = document.getElementById('refresh');
+let refreshLightButton = document.getElementById('refresh-light');
+
 refreshButton.addEventListener('click', () => {
     if (cooldownActive) {
-        return; // Do nothing if cooldown is active
+        return;
     }
-    fetchFact(); // Fetch a new fact if no cooldown
-    startCooldown(); // Start cooldown after fetching a fact
+    fetchFact();
+    startCooldown();
 });
 
 refreshLightButton.addEventListener('click', () => {
     if (cooldownActive) {
-        return; // Do nothing if cooldown is active
+        return;
     }
-    fetchFact(); // Fetch a new fact if no cooldown
-    startCooldown(); // Start cooldown after fetching a fact
+    fetchFact();
+    startCooldown();
 });
 
 async function translateFact(factText, targetLang) {
@@ -235,6 +232,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
         document.body.classList.add(savedTheme);
+    } else {
+        // Set default theme to dark mode if no theme is saved
+        document.body.classList.add('dark-theme');
+        localStorage.setItem('theme', 'dark-theme');
     }
     fetchFact();
     document.getElementById('language').value = selectedLanguage;
@@ -248,7 +249,7 @@ document.getElementById('language').addEventListener('change', function() {
             localStorage.setItem('selectedLanguage', selectedLanguage);
             translateFact(currentFactText, selectedLanguage);
         };
-        return; // If cooldown is active, do nothing
+        return;
     }
 
     selectedLanguage = this.value;

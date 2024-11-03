@@ -199,7 +199,7 @@ body.navy-theme #fact-container {
 }
 
 body.navy-theme #settings-menu {
-    background: rgba(10, 20, 30, 0.85); /* Slightly lighter navy for contrast */
+    background: rgba(255, 255, 255, 0.4);
     color: #EAEAEA; /* Consistent text color */
     border-radius: 20px; /* Keep the radius for softness */
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); /* Enhanced shadow */
@@ -226,20 +226,20 @@ body.navy-theme #cooldown-message {
 /* dark theme */
 
 body.dark-theme {
-    background-color: #0D1B2A; /* Darker navy background */
+    background-color: #000000; /* Darker navy background */
     color: #EAEAEA; /* Soft light color for text */
     animation: circleTransition 0.5s ease;
 }
 
 body.dark-theme #fact-container {
-    background-color: rgba(10, 20, 30, 0.85); /* Contrast with slightly lighter navy */
+    background-color: rgba(0, 0, 0, 0.85); /* Contrast with slightly lighter navy */
     color: #EAEAEA; /* Consistent text color */
     border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5); /* Deeper shadow for depth */
 }
 
 body.dark-theme #settings-menu {
-    background: rgba(0, 0, 0, 0.85); /* Slightly lighter navy for contrast */
+    background: rgba(255, 255, 255, 0.4);
     color: #EAEAEA; /* Consistent text color */
     border-radius: 20px; /* Keep the radius for softness */
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); /* Enhanced shadow */
