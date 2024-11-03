@@ -8,6 +8,7 @@ let cooldownActive = false; // To track if cooldown is active
 const cooldownDuration = 6.9; // Cooldown duration in seconds
 
 let pendingAction = null; // Store the pending action during cooldown
+let currentFactText = ''; // Store the current fact text
 
 function fetchFact() {
     if (cooldownActive) {
@@ -57,10 +58,11 @@ function fetchFact() {
                 fetchFact(); 
             } else {
                 fetchedFacts.add(factText);
-                if (languageSelector.value !== 'en') {
-                    translateFact(factText, languageSelector.value);
+                currentFactText = factText; // Store the current fact text
+                if (selectedLanguage !== 'en') {
+                    translateFact(currentFactText, selectedLanguage);
                 } else {
-                    displayFact(factText, 'en');
+                    displayFact(currentFactText, 'en');
                 }
             }
         } else {
@@ -131,36 +133,41 @@ refreshLightButton.addEventListener('click', () => {
 });
 
 async function translateFact(factText, targetLang) {
-    // Construct the URL for the Lingva API
-    const url = `https://lingva.ml/api/v1/translate?text=${encodeURIComponent(factText)}&to=${targetLang}&from=en`;
+    if (targetLang === 'en') {
+        // If the target language is English, display the fact without translating
+        displayFact(factText, targetLang);
+        return;
+    }
 
+    const url = 'https://text-translator2.p.rapidapi.com/translate';
+    const data = new FormData();
+    data.append('source_language', 'en'); // Assuming facts are in English
+    data.append('target_language', targetLang); // Use the selected target language
+    data.append('text', factText); // Send the actual fact text to translate
+
+    const options = {
+        method: 'POST',
+        headers: {
+            'x-rapidapi-key': '5ffd41ebd2msheec6268037cc706p128a80jsncca3378cdb06',
+            'x-rapidapi-host': 'text-translator2.p.rapidapi.com'
+        },
+        body: data
+    };
+    
     try {
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                // 'Accept': 'application/json', // Optional, usually not needed
-            }
-        });
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        
-        // Lingva returns the translated text in the `text` property
-        if (data && data.text) {
-            displayFact(data.text, targetLang);
+        const response = await fetch(url, options);
+        const result = await response.json(); // Parse as JSON to extract translation
+        if (result && result.data && result.data.translatedText) {
+            displayFact(result.data.translatedText, targetLang); // Display translated text
         } else {
-            throw new Error('Translation not found in response.');
+            console.error('Translation error:', result);
+            displayFact('Translation failed. Please try again.', targetLang);
         }
     } catch (error) {
-        console.error('Error during translation:', error);
-        document.getElementById('fact').textContent = `An error occurred during translation: ${error.message}`;
+        console.error('Error translating fact:', error);
+        displayFact(`An error occurred during translation: ${error.message}`, targetLang);
     }
 }
-
 
 function displayFact(factText, targetLang) {
     let factContainer = document.getElementById('fact-container');
@@ -200,15 +207,14 @@ document.getElementById('language').addEventListener('change', function() {
         pendingAction = () => {
             selectedLanguage = this.value; // Update the selected language
             localStorage.setItem('selectedLanguage', selectedLanguage);
-            fetchFact(); // Fetch a new fact after the cooldown
+            translateFact(currentFactText, selectedLanguage); // Translate the current fact
         };
         return; // If cooldown is active, do nothing
     }
 
     selectedLanguage = this.value; // Update the selected language
     localStorage.setItem('selectedLanguage', selectedLanguage);
-    fetchFact(); // Fetch a new fact with the new language
-    startCooldown(); // Start cooldown
+    translateFact(currentFactText, selectedLanguage); // Translate the current fact
 });
 
 document.getElementById('settings-btn').addEventListener('click', function() {

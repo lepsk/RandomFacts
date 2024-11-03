@@ -255,8 +255,8 @@ body.light-theme #settings-menu {
 
 @media only screen and (max-width: 600px) {
     #cooldown-message {
-        bottom: 70px; /* Adjust position for mobile */
-        right: 15px; /* Adjust position for mobile */
+        bottom: 15px; /* Adjust position for mobile */
+        right: 0px; /* Adjust position for mobile */
         padding: 8px 12px; /* Smaller padding for mobile */
         font-size: 14px; /* Slightly smaller font for mobile */
     }
