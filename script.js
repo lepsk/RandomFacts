@@ -134,7 +134,6 @@ refreshLightButton.addEventListener('click', () => {
 
 async function translateFact(factText, targetLang) {
     if (targetLang === 'en') {
-        // If the target language is English, display the fact without translating
         displayFact(factText, targetLang);
         return;
     }
@@ -142,35 +141,31 @@ async function translateFact(factText, targetLang) {
     const detectUrl = 'https://deep-translate1.p.rapidapi.com/language/translate/v2/detect';
     const translateUrl = 'https://deep-translate1.p.rapidapi.com/language/translate/v2';
 
-    // Detect the language of the fact text
     const detectOptions = {
         method: 'POST',
         headers: {
-            'x-rapidapi-key': '5ffd41ebd2msheec6268037cc706p128a80jsncca3378cdb06', //I know the api key is visable, if you use it for you own project (even tho its 100% free..) or abuse the api key for fun youre a sad and lonely man and you should seek help.. 
+            'x-rapidapi-key': '5ffd41ebd2msheec6268037cc706p128a80jsncca3378cdb06',
             'x-rapidapi-host': 'deep-translate1.p.rapidapi.com',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ q: factText }) // Using the fact text to detect language
+        body: JSON.stringify({ q: factText })
     };
 
     try {
         const detectResponse = await fetch(detectUrl, detectOptions);
         const detectResult = await detectResponse.json();
 
-        // Check if the detection was successful
         if (!detectResult || !detectResult.data || !detectResult.data.detections || detectResult.data.detections.length === 0) {
             throw new Error('Language detection failed or returned no results');
         }
 
-        const sourceLanguage = detectResult.data.detections[0].language; // Get detected language
+        const sourceLanguage = detectResult.data.detections[0].language;
 
         const translationData = {
             source_language: sourceLanguage,
             target_language: targetLang,
             text: factText
         };
-
-        console.log('Translation Request Data:', translationData); // Debugging log
 
         const translateOptions = {
             method: 'POST',
@@ -180,20 +175,18 @@ async function translateFact(factText, targetLang) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                q: factText, // Sending the text to translate
-                source: sourceLanguage, // Using the detected source language
-                target: targetLang // Target language
+                q: factText,
+                source: sourceLanguage,
+                target: targetLang
             })
         };
 
         const translateResponse = await fetch(translateUrl, translateOptions);
         const translateResult = await translateResponse.json();
 
-        // Check if translation was successful
         if (translateResponse.ok) {
-            // Adjusted to access the translated text correctly
             if (translateResult && translateResult.data && translateResult.data.translations && translateResult.data.translations.translatedText) {
-                displayFact(translateResult.data.translations.translatedText, targetLang); // Display translated text
+                displayFact(translateResult.data.translations.translatedText, targetLang);
             } else {
                 console.error('Translation error:', translateResult);
                 displayFact('Translation failed. Please try again.');
@@ -207,7 +200,6 @@ async function translateFact(factText, targetLang) {
         displayFact(`An error occurred during translation: ${error.message}`, targetLang);
     }
 }
-
 
 function displayFact(factText, targetLang) {
     let factContainer = document.getElementById('fact-container');
@@ -238,25 +230,33 @@ function applyGlowEffect() {
     }
 }
 
-fetchFact();
+// Load the initial theme from localStorage
+document.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        document.body.classList.add(savedTheme);
+    }
+    fetchFact();
+    document.getElementById('language').value = selectedLanguage;
+});
 
-document.getElementById('language').value = selectedLanguage;
-
+// Event listeners for language selection
 document.getElementById('language').addEventListener('change', function() {
     if (cooldownActive) {
         pendingAction = () => {
-            selectedLanguage = this.value; // Update the selected language
+            selectedLanguage = this.value;
             localStorage.setItem('selectedLanguage', selectedLanguage);
-            translateFact(currentFactText, selectedLanguage); // Translate the current fact
+            translateFact(currentFactText, selectedLanguage);
         };
         return; // If cooldown is active, do nothing
     }
 
-    selectedLanguage = this.value; // Update the selected language
+    selectedLanguage = this.value;
     localStorage.setItem('selectedLanguage', selectedLanguage);
-    translateFact(currentFactText, selectedLanguage); // Translate the current fact
+    translateFact(currentFactText, selectedLanguage);
 });
 
+// Settings menu functionality
 document.getElementById('settings-btn').addEventListener('click', function() {
     document.body.classList.toggle('modal-active');
 });
@@ -271,26 +271,28 @@ document.body.addEventListener('click', function(event) {
     }
 });
 
+// Glow effect toggle
 document.getElementById('toggle-glow').addEventListener('click', function() {
     glowEnabled = !glowEnabled;
     localStorage.setItem('glowEnabled', glowEnabled);
     applyGlowEffect();
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-        document.body.classList.add(savedTheme);
-        document.getElementById('refresh').style.display = savedTheme === 'light-theme' ? 'none' : 'block';
-        document.getElementById('refresh-light').style.display = savedTheme === 'light-theme' ? 'block' : 'none';
-    }
+// Theme toggle buttons in the settings menu
+document.getElementById('toggle-light-theme').addEventListener('click', function() {
+    document.body.classList.remove('dark-theme', 'navy-theme');
+    document.body.classList.add('light-theme');
+    localStorage.setItem('theme', 'light-theme');
 });
 
-document.getElementById('toggle-theme').addEventListener('click', function() {
-    document.body.classList.toggle('light-theme');
-    const theme = document.body.classList.contains('light-theme') ? 'light-theme' : '';
-    localStorage.setItem('theme', theme);
-    
-    document.getElementById('refresh').style.display = theme === 'light-theme' ? 'none' : 'block';
-    document.getElementById('refresh-light').style.display = theme === 'light-theme' ? 'block' : 'none';
+document.getElementById('toggle-dark-theme').addEventListener('click', function() {
+    document.body.classList.remove('light-theme', 'navy-theme');
+    document.body.classList.add('dark-theme');
+    localStorage.setItem('theme', 'dark-theme');
+});
+
+document.getElementById('toggle-navy-theme').addEventListener('click', function() {
+    document.body.classList.remove('light-theme', 'dark-theme');
+    document.body.classList.add('navy-theme');
+    localStorage.setItem('theme', 'navy-theme');
 });
